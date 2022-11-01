@@ -1,7 +1,7 @@
 ﻿using Octokit;
 
 var uriString = args[0];
-var pat = args[1];
+var pat = args.Length > 1 ? args[1] : null;
 if (string.IsNullOrEmpty(uriString) ||
     !Uri.TryCreate(uriString, UriKind.Absolute, out var uri))
 {
@@ -24,7 +24,10 @@ var orgOrUserName = uri.Segments[1].Trim('/');
 var repositoryName = uri.Segments.Length > 2 ? uri.Segments[2].Trim('/') : null;
 
 var client = new GitHubClient(new ProductHeaderValue("GitHubContributorCounter"));
-client.Credentials = new Credentials(pat);
+if (!string.IsNullOrEmpty(pat))
+{
+    client.Credentials = new Credentials(pat);
+}
 
 bool isOrganization = false;
 try
